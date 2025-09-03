@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.postAlign {
+  @apply m-20 mx-auto border h-15  text-center  rounded-3xl w-4xl hover:scale-105 pt-4;
+}
