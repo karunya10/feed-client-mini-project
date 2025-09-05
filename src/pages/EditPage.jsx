@@ -1,13 +1,27 @@
-import { useContext, useState, useEffect } from "react";
-import { PostContext } from "../context/PostContext";
+import { useState, useEffect } from "react";
+// import { PostContext } from "../context/PostContext";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { editPost, fetchPosts } from "../hooks/usePost";
 
 function EditPage() {
-  const { posts, editPost } = useContext(PostContext);
+
   const [post, setPost] = useState({});
   const { postid } = useParams();
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+  const { data: posts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts,
+  });
+
+  const updatePost = useMutation({
+    mutationFn: (updatedPost) => editPost(postid, updatedPost),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
 
   const filteredPost = posts.find((post) => post._id === postid);
 
@@ -17,7 +31,7 @@ function EditPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editPost(postid, post);
+    updatePost.mutate(post);
     navigate("/");
   };
 

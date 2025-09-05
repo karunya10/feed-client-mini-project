@@ -1,17 +1,19 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import App from "./App.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthContextProvider from "./context/authContext.jsx";
-import PostContextProvider from "./context/PostContext";
+// import PostContextProvider from "./context/PostContext";
+import "./index.css";
+import App from "./App.jsx";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
-  <Router>
-    <AuthContextProvider>
-      <PostContextProvider>
+  <QueryClientProvider client={queryClient}>
+    <Router>
+      <AuthContextProvider>
         <App />
-      </PostContextProvider>
-    </AuthContextProvider>
-  </Router>
+      </AuthContextProvider>
+    </Router>
+  </QueryClientProvider>
 );

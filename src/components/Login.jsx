@@ -1,13 +1,11 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostContext } from "../context/PostContext";
+// import { PostContext } from "../context/PostContext";
 function Login({ userData, handleOnchange, setToggleAuth, login }) {
   const navigate = useNavigate();
-  const { fetchPosts } = useContext(PostContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(userData);
-    await fetchPosts();
     navigate("/");
   };
   return (

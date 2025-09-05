@@ -1,9 +1,17 @@
 import PostList from "../components/PostList";
-import { PostContext } from "../context/PostContext";
-import { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPosts } from "../hooks/usePost";
 
 function HomePage() {
-  const { posts } = useContext(PostContext);
+  const {
+    data: posts,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts,
+  });
 
   return (
     <>

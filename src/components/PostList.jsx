@@ -1,10 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePost } from "../hooks/usePost";
 
-function PostList({ post, deletePost, user }) {
+function PostList({ post, user }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (postId) => deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
   const handleDelete = (e) => {
     e.stopPropagation();
-    deletePost(post._id);
+    mutation.mutate(post._id);
     navigate("/");
   };
   return (

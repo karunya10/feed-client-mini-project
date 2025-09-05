@@ -1,18 +1,27 @@
 import { useContext, useState } from "react";
-import { PostContext } from "../context/PostContext";
+// import { PostContext } from "../context/PostContext";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createPost } from "../hooks/usePost";
 
 function PostCreation() {
-  const { createPost, fetchPosts } = useContext(PostContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+  const postToCreate = useMutation({
+    mutationFn: (newPost) => createPost(newPost),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
   const [post, setPost] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    createPost({ post, owner: user._id });
-
+    postToCreate.mutate({ post, owner: user._id });
     navigate("/");
   };
 
